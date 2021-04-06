@@ -47,7 +47,8 @@ def reformat(python_code: str, align_commas=False, guess_indent=False):
     if python_code.startswith(" "):
         # Restore the initial indent, so code will copy-paste directly into
         # where it came from.
-        initial_indent = python_code[0 : -len(python_code.lstrip(" "))]
+        length_without_indent = len(python_code.lstrip(" "))
+        initial_indent = python_code[0:-length_without_indent]
 
     if guess_indent:
         # We assuming code looks like this:
