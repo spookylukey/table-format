@@ -81,3 +81,13 @@ def test_preserve_comments_between_lines():
     # Trailing stuff
     # More trailing stuff
 ]"""
+
+
+def test_preserve_comments_at_ends_of_lines():
+    assert reformat("""[
+    [abc, defg],  # Stuff
+    [1, 2]  # More stuff
+]""") == """[
+    [abc, defg],  # Stuff
+    [1,   2   ],  # More stuff
+]"""

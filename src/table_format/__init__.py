@@ -65,7 +65,10 @@ def reformat(python_code: str, align_commas=False, guess_indent=False):
     # This is the most fragile bit - it would be easy to miss things here. The
     # alternative would a very different structure for the whole code, that
     # transforms code_cst, adjusting whitespace as we go. It might be harder and
-    # more bug prone however.
+    # more bug prone however. We cannot support comments in every location either,
+    # so it might be simpler this way.
+
+    # Comments before first row
     if hasattr(code_cst.lbracket.whitespace_after, 'empty_lines'):
         initial_comments = [
             line.comment.value + "\n"
@@ -74,6 +77,26 @@ def reformat(python_code: str, align_commas=False, guess_indent=False):
     else:
         initial_comments = []
 
+    # Comments at the end of each row - paired with rows
+    end_of_row_comments = []
+    for element in code_cst.elements:
+        if (
+                hasattr(element.comma, 'whitespace_after')
+                and hasattr(element.comma.whitespace_after, 'first_line')
+                and getattr(element.comma.whitespace_after.first_line, 'comment', None)
+        ):
+            comment = element.comma.whitespace_after.first_line.comment.value
+        else:
+            comment = ''
+        end_of_row_comments.append(comment)
+    # Last row comment is attached to rbracket of main expression
+    if (
+            hasattr(code_cst.rbracket.whitespace_before, 'first_line')
+            and getattr(code_cst.rbracket.whitespace_before.first_line, 'comment', None)
+    ):
+        end_of_row_comments[-1] = code_cst.rbracket.whitespace_before.first_line.comment.value
+
+    # Comments on their own lines after each row - these will be paired with rows
     after_row_comments = []
     for element in code_cst.elements:
         if hasattr(element.comma, 'whitespace_after') and hasattr(element.comma.whitespace_after, 'empty_lines'):
@@ -82,6 +105,7 @@ def reformat(python_code: str, align_commas=False, guess_indent=False):
             comment = ''
         after_row_comments.append(comment)
 
+    # Comments on their own lines after the last row
     if hasattr(code_cst.rbracket.whitespace_before, 'empty_lines'):
         final_comments = [
             line.comment.value + "\n"
@@ -95,7 +119,7 @@ def reformat(python_code: str, align_commas=False, guess_indent=False):
     output.append(initial_indent + "[\n")
     for comment in initial_comments:
         output.append(indent + comment)
-    for row, after_row_comment in zip(reprs, after_row_comments):
+    for row, end_of_row_comment, after_row_comment in zip(reprs, end_of_row_comments, after_row_comments):
         output.append(indent + "[")
         for idx, item in enumerate(row):
             need_comma = idx < len(row) - 1
@@ -103,7 +127,10 @@ def reformat(python_code: str, align_commas=False, guess_indent=False):
             pre_separator = "" if align_commas else separator
             post_separator = separator if align_commas else ""
             output.append(item + pre_separator + " " * (col_widths[idx] - len(item)) + post_separator)
-        output.append("],\n")
+        output.append("],")
+        if end_of_row_comment:
+            output.append('  ' + end_of_row_comment)
+        output.append("\n")
         if after_row_comment:
             for comment in after_row_comment.split('\n'):
                 output.append(indent + comment + '\n')
