@@ -101,7 +101,7 @@ nicely aligned columns.
 
 ### Emacs
 With default keybindings, doing `C-u` `M-|` `table-format --guess-indent` `ENTER` will
-replace the current region with the formatted version from ``table-format`.
+replace the current region with the formatted version from `table-format`.
 
 You can wrap it up in a nice function like this:
 
