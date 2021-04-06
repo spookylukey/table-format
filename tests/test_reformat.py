@@ -6,30 +6,35 @@ def test_reformat_empty():
 
 
 def test_reformat_simple():
-    assert reformat(""" [
+    assert reformat("""[
     [a, b, c],
     [defg, hi, jkl],
-]""") == """ [
+]""") == """[
     [a,    b,  c  ],
     [defg, hi, jkl],
 ]"""
 
 
+def test_reformat_preserve_inital_indent():
+    assert reformat("""    []""") == """    [
+]"""
+
+
 def test_reformat_align_commas():
-    assert reformat(""" [
+    assert reformat("""[
     [a, b, c],
     [defg, hi, jkl],
-]""", align_commas=True) == """ [
+]""", align_commas=True) == """[
     [a   , b , c  ],
     [defg, hi, jkl],
 ]"""
 
 
-def test_reformat_guess_indent_commas():
-    assert reformat(""" [
+def test_reformat_guess_indent():
+    assert reformat("""[
         [a, b],
         [defg, hi],
-]""", guess_indent=True) == """ [
+]""", guess_indent=True) == """[
         [a,    b ],
         [defg, hi],
     ]"""
