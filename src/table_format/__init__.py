@@ -12,6 +12,7 @@ def reformat(python_code: str, align_commas=False, guess_indent=False):
     """
     Reformat list of lists as fixed width table
     """
+    # Who says your code can't just be one massive function...
     if python_code.strip() == "":
         return ""
     try:
