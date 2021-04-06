@@ -48,8 +48,8 @@ Copy the whole list of lists to the clipboard, then pipe to ``table-format
 ```shell
 $ xsel | table-format --guess-indent
 [
-        ['Date',       'Name',        'Projects released'],
-        ['2021-04-06', 'spookylukey', 1                  ],
+        ["Date",       "Name",        "Projects released"],
+        ["2021-04-06", "spookylukey", 1                  ],
     ]
 ```
 
