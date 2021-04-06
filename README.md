@@ -24,9 +24,6 @@
     <a href="https://github.com/spookylukey/table-format/blob/master/LICENSE">
         <img alt="PyPI - License" src="https://img.shields.io/pypi/l/table-format" />
     </a>
-    <a href='https://table-format.readthedocs.io/en/latest/?badge=latest'>
-        <img src='https://readthedocs.org/projects/table-format/badge/?version=latest' alt='Documentation Status' />
-    </a>
 </p>
 
 Format Python code (list of lists) as a fixed width table.
