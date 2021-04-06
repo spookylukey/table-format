@@ -31,26 +31,36 @@
 
 Format Python code (list of lists) as a fixed width table.
 
-## 💪 Getting Started
+## Usage
 
-You've got some tests like this:
+You've got some tests or other code like this:
 ```python
 
-def test_the_thing():
-    assert do_the_thing() == [
-        ["A nice header", "Another", "More"],
-        [1, 2, 3],
+def test_the_table():
+    assert generate_the_table() == [
+        ["Date", "Name", "Projects released"],
+        ["2021-04-06", "spookylukey", 1],
     ]
 ```
 
 Wouldn't it be nice if those columns lined up?
 
-Copy the whole list of lists to the clipboard, then pipe to ``table-format --guess-indent``. On Linux you could use `xsel` or `xclip` etc:
+Copy the whole list of lists to the clipboard, then pipe to ``table-format
+--guess-indent``. On Linux you could use `xsel` or `xclip` etc:
 
+```shell
+$ xsel | table-format --guess-indent
+[
+        ['Date',       'Name',        'Projects released'],
+        ['2021-04-06', 'spookylukey', 1                  ],
+    ]
+```
+
+The output should be ready to paste back into your editor.
 
 ### Options
 
-Pass the `--help` flag to show all subcommands:
+Pass the `--help` flag to show all options:
 
 ```shell
 $ table-format --help
@@ -92,9 +102,12 @@ involved.
 
 ## 🍪 Cookiecutter Acknowledgement
 
-This package was created with [@audreyfeldroy](https://github.com/audreyfeldroy)'s
-[cookiecutter](https://github.com/cookiecutter/cookiecutter) package using [@cthoyt](https://github.com/cthoyt)'s
-[cookiecutter-python-package](https://github.com/cthoyt/cookiecutter-python-package) template.
+This package was created with
+[@audreyfeldroy](https://github.com/audreyfeldroy)'s
+[cookiecutter](https://github.com/cookiecutter/cookiecutter) package using
+[@cthoyt](https://github.com/cthoyt)'s
+[cookiecutter-python-package](https://github.com/cthoyt/cookiecutter-python-package)
+template.
 
 ## 🛠️ Development
 
