@@ -55,3 +55,29 @@ def test_reformat_not_a_list():
 def test_reformat_not_a_list_of_lists():
     with pytest.raises(AssertionError):
         reformat('[1]')
+
+
+def test_preserve_comments_between_lines():
+    assert reformat("""[
+    # Leading stuff
+    # More leading stuff
+    [abc, defg],
+    # Middle stuff
+    # More middle stuff
+    [1, 2],
+    # More middle stuff 2
+    [3, 4]
+    # Trailing stuff
+    # More trailing stuff
+]""") == """[
+    # Leading stuff
+    # More leading stuff
+    [abc, defg],
+    # Middle stuff
+    # More middle stuff
+    [1,   2   ],
+    # More middle stuff 2
+    [3,   4   ],
+    # Trailing stuff
+    # More trailing stuff
+]"""

@@ -60,10 +60,42 @@ def reformat(python_code: str, align_commas=False, guess_indent=False):
             indent = parts[1].lstrip("\n")
             final_indent = max(len(indent) - ONE_INDENT, 0) * " "
 
+    # Collect comments.
+
+    # This is the most fragile bit - it would be easy to miss things here. The
+    # alternative would a very different structure for the whole code, that
+    # transforms code_cst, adjusting whitespace as we go. It might be harder and
+    # more bug prone however.
+    if hasattr(code_cst.lbracket.whitespace_after, 'empty_lines'):
+        initial_comments = [
+            line.comment.value + "\n"
+            for line in code_cst.lbracket.whitespace_after.empty_lines
+        ]
+    else:
+        initial_comments = []
+
+    after_row_comments = []
+    for element in code_cst.elements:
+        if hasattr(element.comma, 'whitespace_after') and hasattr(element.comma.whitespace_after, 'empty_lines'):
+            comment = '\n'.join(line.comment.value for line in element.comma.whitespace_after.empty_lines)
+        else:
+            comment = ''
+        after_row_comments.append(comment)
+
+    if hasattr(code_cst.rbracket.whitespace_before, 'empty_lines'):
+        final_comments = [
+            line.comment.value + "\n"
+            for line in code_cst.rbracket.whitespace_before.empty_lines
+        ]
+    else:
+        final_comments = []
+
     # Output
     output = []
     output.append(initial_indent + "[\n")
-    for row in reprs:
+    for comment in initial_comments:
+        output.append(indent + comment)
+    for row, after_row_comment in zip(reprs, after_row_comments):
         output.append(indent + "[")
         for idx, item in enumerate(row):
             need_comma = idx < len(row) - 1
@@ -72,6 +104,11 @@ def reformat(python_code: str, align_commas=False, guess_indent=False):
             post_separator = separator if align_commas else ""
             output.append(item + pre_separator + " " * (col_widths[idx] - len(item)) + post_separator)
         output.append("],\n")
+        if after_row_comment:
+            for comment in after_row_comment.split('\n'):
+                output.append(indent + comment + '\n')
+    for comment in final_comments:
+        output.append(indent + comment)
     output.append(final_indent + "]")
     return "".join(output)
 
