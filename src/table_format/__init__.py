@@ -43,8 +43,7 @@ def reformat(python_code: str, align_commas=False, guess_indent=False):
     if python_code.startswith(" "):
         # Restore the initial indent, so code will copy-paste directly into
         # where it came from.
-        length_without_indent = len(python_code.lstrip(" "))
-        initial_indent = python_code[0:-length_without_indent]
+        initial_indent = " " * get_indent_size(python_code)
 
     if guess_indent:
         # We assuming code looks like this:
@@ -55,10 +54,13 @@ def reformat(python_code: str, align_commas=False, guess_indent=False):
         #     ]
         #
         # The user has selected text from first '['
-        parts = python_code.strip().split("[")
-        if len(parts) > 1 and parts[1].startswith("\n"):
-            indent = parts[1].lstrip("\n")
-            final_indent = max(len(indent) - ONE_INDENT, 0) * " "
+        # We remove any comment lines
+        lines = python_code.strip().split('\n')
+        lines = [line for line in lines if not line.strip().startswith('#')]
+        if len(lines) > 1:
+            indent_size = get_indent_size(lines[1])
+            indent = " " * indent_size
+            final_indent = " " * max(indent_size - ONE_INDENT, 0)
 
     # Collect comments.
 
@@ -144,3 +146,7 @@ def cst_node_to_code(node):
     state = CodegenState(default_indent=4, default_newline='\n')
     node._codegen(state)
     return "".join(state.tokens)
+
+
+def get_indent_size(text):
+    return len(text) - len(text.lstrip(" "))

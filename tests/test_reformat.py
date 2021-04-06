@@ -42,6 +42,18 @@ def test_reformat_guess_indent():
     ]"""
 
 
+def test_reformat_guess_indent_with_comment():
+    assert reformat("""[
+        # Hello
+        [a, b],
+        [defg, hi],
+]""", guess_indent=True) == """[
+        # Hello
+        [a,    b ],
+        [defg, hi],
+    ]"""
+
+
 def test_reformat_bad_syntax():
     with pytest.raises(AssertionError):
         reformat('[')
@@ -90,4 +102,24 @@ def test_preserve_comments_at_ends_of_lines():
 ]""") == """[
     [abc, defg],  # Stuff
     [1,   2   ],  # More stuff
+]"""
+
+
+def test_preserve_comments_with_guess_indent():
+    assert reformat("""[
+    # Leading stuff
+    [abc, defg],
+    # Middle stuff
+    [1, 2],
+    # More middle stuff 2
+    [3, 4]
+    # Trailing stuff
+]""", guess_indent=True) == """[
+    # Leading stuff
+    [abc, defg],
+    # Middle stuff
+    [1,   2   ],
+    # More middle stuff 2
+    [3,   4   ],
+    # Trailing stuff
 ]"""
