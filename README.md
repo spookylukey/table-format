@@ -21,7 +21,7 @@
     <a href="https://pypi.org/project/table-format">
         <img alt="PyPI - Python Version" src="https://img.shields.io/pypi/pyversions/table-format" />
     </a>
-    <a href="https://github.com/spookylukey/table-format/blob/main/LICENSE">
+    <a href="https://github.com/spookylukey/table-format/blob/master/LICENSE">
         <img alt="PyPI - License" src="https://img.shields.io/pypi/l/table-format" />
     </a>
     <a href='https://table-format.readthedocs.io/en/latest/?badge=latest'>
