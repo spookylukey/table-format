@@ -29,13 +29,20 @@ argument_parser.add_argument("--guess-indent", action="store_true",
 
 def main():
     args = argument_parser.parse_args()
-    sys.stdout.write(
-        reformat(
-            sys.stdin.read(),
+    input_data = sys.stdin.read()
+    try:
+        sys.stdout.write(reformat(
+            input_data,
             align_commas=args.align_commas,
             guess_indent=args.guess_indent,
-        )
-    )
+        ))
+    except Exception as e:
+        # For the sake of tools that are piping output as replacement,
+        # return what our input was:
+        sys.stdout.write(input_data)
+        # And then write the error to stderr and exit
+        sys.stderr.write(repr(e) + "\n")
+        sys.exit(1)
 
 
 if __name__ == "__main__":

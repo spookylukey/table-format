@@ -90,6 +90,36 @@ $ git clone git+https://github.com/spookylukey/table-format.git
 $ cd table-format
 $ pip install -e .
 ```
+## Other tips
+
+black: use `# fmt: off` and `# fmt: on` commands to stop black reformatting your
+nicely aligned columns.
+
+
+### Emacs
+With default keybindings, doing `C-u` `M-|` `table-format --guess-indent` `ENTER` will
+replace the current region with the formatted version from ``table-format`.
+
+You can wrap it up in a nice function like this:
+
+```elisp
+(defun align-python-table ()
+  (interactive)
+  (shell-command-on-region
+   ;; beginning and end of region
+   (region-beginning)
+   (region-end)
+   ;; command and parameters
+   "table-format --guess-indent"
+   ;; output buffer
+   (current-buffer)
+   ;; replace?
+   t
+   ;; name of the error buffer
+   "*Table-Format Error Buffer*"
+   ;; show error buffer?
+   t))
+```
 
 ## ⚖️ License
 
