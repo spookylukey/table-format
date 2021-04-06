@@ -1,3 +1,5 @@
+import pytest
+
 from table_format import reformat
 
 
@@ -38,3 +40,8 @@ def test_reformat_guess_indent():
         [a,    b ],
         [defg, hi],
     ]"""
+
+
+def test_reformat_bad_syntax():
+    with pytest.raises(AssertionError):
+        reformat('[')
