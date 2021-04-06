@@ -1,0 +1,10 @@
+# Sync with .pre-commit-config.yaml
+flake8==3.9.0
+flake8-bandit
+flake8-colors
+flake8-import-order
+flake8-bugbear
+flake8-broken-line
+pep8-naming
+pydocstyle
+isort==5.6.4
