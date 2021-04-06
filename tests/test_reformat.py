@@ -13,3 +13,23 @@ def test_reformat_simple():
     [a,    b,  c  ],
     [defg, hi, jkl],
 ]"""
+
+
+def test_reformat_align_commas():
+    assert reformat(""" [
+    [a, b, c],
+    [defg, hi, jkl],
+]""", align_commas=True) == """ [
+    [a   , b , c  ],
+    [defg, hi, jkl],
+]"""
+
+
+def test_reformat_guess_indent_commas():
+    assert reformat(""" [
+        [a, b],
+        [defg, hi],
+]""", guess_indent=True) == """ [
+        [a,    b ],
+        [defg, hi],
+    ]"""
