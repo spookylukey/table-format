@@ -94,13 +94,6 @@ $ cd table-format
 $ pip install -e .
 ```
 
-## Bugs
-
-It strips comments. Should be fixable using a library that supports
-a Concrete Syntax Tree e.g. https://github.com/Instagram/LibCST
-
-It doesn't preserve styles like single or double-quoted strings.
-
 ## Other tips
 
 black: use `# fmt: off` and `# fmt: on` commands to stop black reformatting your
