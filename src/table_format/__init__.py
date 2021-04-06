@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 """Format Python code (list of lists) as a fixed width table."""
-import ast
 from collections import defaultdict
 
-import ast_decompiler
+import libcst
+from libcst._nodes.internal import CodegenState
 
 ONE_INDENT = 4  # spaces. As God intended
 
@@ -15,24 +15,20 @@ def reformat(python_code: str, align_commas=False, guess_indent=False):
     if python_code.strip() == "":
         return ""
     try:
-        code_ast = ast.parse(python_code.strip())
-    except SyntaxError:
+        code_cst = libcst.parse_expression(python_code.strip())
+    except Exception:
         raise AssertionError("Couldn't parse input as Python code")
 
     # Validate input
-    expressions = code_ast.body
-    if not len(expressions) == 1:
-        raise AssertionError("Expected a single expression in the submitted code.")
-    expr = expressions[0]
-    if not isinstance(expr.value, ast.List):
+    if not isinstance(code_cst, libcst.List):
         raise AssertionError("Expected a list expression as single input expression.")
-    main_list = expr.value
-    for element in main_list.elts:
-        if not isinstance(element, ast.List):
-            raise AssertionError(f"Expected each sub element to be a list, found {element}.")
+    for element in code_cst.elements:
+        if not isinstance(element.value, libcst.List):
+            raise AssertionError(f"Expected each sub element to be a list, found {element.value}.")
 
     # Build all reprs of elements
-    reprs = [[ast_decompiler.decompile(element) for element in sublist.elts] for sublist in expr.value.elts]
+    reprs = [[cst_node_to_code(element.value) for element in sublist.value.elements]
+             for sublist in code_cst.elements]
 
     # Calculate max widths
     col_widths = defaultdict(int)
@@ -78,3 +74,9 @@ def reformat(python_code: str, align_commas=False, guess_indent=False):
         output.append("],\n")
     output.append(final_indent + "]")
     return "".join(output)
+
+
+def cst_node_to_code(node):
+    state = CodegenState(default_indent=4, default_newline='\n')
+    node._codegen(state)
+    return "".join(state.tokens)
