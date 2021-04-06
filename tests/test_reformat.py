@@ -45,3 +45,13 @@ def test_reformat_guess_indent():
 def test_reformat_bad_syntax():
     with pytest.raises(AssertionError):
         reformat('[')
+
+
+def test_reformat_not_a_list():
+    with pytest.raises(AssertionError):
+        reformat('1')
+
+
+def test_reformat_not_a_list_of_lists():
+    with pytest.raises(AssertionError):
+        reformat('[1]')
