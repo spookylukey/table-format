@@ -68,14 +68,20 @@ $ table-format --help
 
 ## ⬇️ Installation
 
-<!-- Uncomment this section after your first ``tox -e finish``
 The most recent release can be installed from
 [PyPI](https://pypi.org/project/table-format/) with:
 
 ```bash
 $ pip install table-format
 ```
--->
+
+You can also use [pipx](https://pipxproject.github.io/pipx/) to install it more
+conveniently in an isolated environment:
+
+```bash
+$ pipx install table-format
+```
+
 
 The most recent code and data can be installed directly from GitHub with:
 
