@@ -32,13 +32,7 @@ def reformat(python_code: str, align_commas=False, guess_indent=False):
             raise AssertionError(f"Expected each sub element to be a list, found {element}.")
 
     # Build all reprs of elements
-    reprs = [
-        [
-            ast_decompiler.decompile(element)
-            for element in sublist.elts
-        ]
-        for sublist in expr.value.elts
-    ]
+    reprs = [[ast_decompiler.decompile(element) for element in sublist.elts] for sublist in expr.value.elts]
 
     # Calculate max widths
     col_widths = defaultdict(int)
@@ -53,7 +47,7 @@ def reformat(python_code: str, align_commas=False, guess_indent=False):
     if python_code.startswith(" "):
         # Restore the initial indent, so code will copy-paste directly into
         # where it came from.
-        initial_indent = python_code[0:-len(python_code.lstrip(" "))]
+        initial_indent = python_code[0 : -len(python_code.lstrip(" "))]
 
     if guess_indent:
         # We assuming code looks like this:

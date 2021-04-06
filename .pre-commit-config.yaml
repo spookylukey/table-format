@@ -12,3 +12,8 @@ repos:
     rev: 'v5.6.4'
     hooks:
     -   id: isort
+-   repo: https://github.com/ambv/black
+    rev: stable
+    hooks:
+    - id: black
+      language_version: python3.8

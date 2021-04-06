@@ -14,28 +14,28 @@ later, but that will cause problems--the code will get executed twice:
 import argparse
 import sys
 
-__all__ = ['main']
+__all__ = ["main"]
 
 from . import reformat
 
-argument_parser = argparse.ArgumentParser(
-    usage="Reads Python code from stdin and prints reformatted code to stdout"
+argument_parser = argparse.ArgumentParser(usage="Reads Python code from stdin and prints reformatted code to stdout")
+argument_parser.add_argument("--align-commas", action="store_true", help="Pass this to make commas aligned")
+argument_parser.add_argument(
+    "--guess-indent", action="store_true", help="Pass this to attempt to guess indent (from second line of text)"
 )
-argument_parser.add_argument("--align-commas", action="store_true",
-                             help="Pass this to make commas aligned")
-argument_parser.add_argument("--guess-indent", action="store_true",
-                             help="Pass this to attempt to guess indent (from second line of text)")
 
 
 def main():
     args = argument_parser.parse_args()
     input_data = sys.stdin.read()
     try:
-        sys.stdout.write(reformat(
-            input_data,
-            align_commas=args.align_commas,
-            guess_indent=args.guess_indent,
-        ))
+        sys.stdout.write(
+            reformat(
+                input_data,
+                align_commas=args.align_commas,
+                guess_indent=args.guess_indent,
+            )
+        )
     except Exception as e:
         # For the sake of tools that are piping output as replacement,
         # return what our input was:
