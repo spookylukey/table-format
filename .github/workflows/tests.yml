@@ -21,8 +21,8 @@ jobs:
         run: tox -e manifest
       - name: Check code quality with flake8
         run: tox -e flake8
-      - name: Check static typing with MyPy
-        run: tox -e mypy
+      - name: Check import sort order
+        run: tox -e isort
   tests:
     name: Tests
     runs-on: ${{ matrix.os }}
