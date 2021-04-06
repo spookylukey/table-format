@@ -5,7 +5,7 @@
 -->
 
 <h1 align="center">
-  table_format
+  table-format
 </h1>
 
 <p align="center">
