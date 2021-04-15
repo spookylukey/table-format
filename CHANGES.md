@@ -1,4 +1,4 @@
-# Version 1.2 (unreleased)
+# Version 1.2 (2021-04-15)
 
 * Re-format individual items to have PEP8 whitespace and no line-breaks.
 
