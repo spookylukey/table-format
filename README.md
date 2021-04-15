@@ -78,7 +78,7 @@ conveniently in an isolated environment:
 ```bash
 $ pipx install table-format
 ```
-
+See [CHANGES](CHANGES.md) for changelog.
 
 The most recent code and data can be installed directly from GitHub with:
 
@@ -134,6 +134,23 @@ Contributions, whether filing an issue, making a pull request, or forking, are a
 [CONTRIBUTING.rst](https://github.com/spookylukey/table-format/blob/master/CONTRIBUTING.rst) for more information on getting
 involved.
 
+## 🛠️ Development
+
+The final section of the README is you for if you want to get involved by making
+a code contribution.
+
+### ❓ Testing
+
+After cloning the repository and installing `tox` with `pip install tox`, the
+unit tests in the `tests/` folder can be run reproducibly with:
+
+```shell
+$ tox
+```
+
+Additionally, these tests are automatically re-run with each commit in a [GitHub
+Action](https://github.com/spookylukey/table-format/actions?query=workflow%3ATests).
+
 ## 🍪 Cookiecutter Acknowledgement
 
 This package was created with
@@ -142,18 +159,3 @@ This package was created with
 [@cthoyt](https://github.com/cthoyt)'s
 [cookiecutter-python-package](https://github.com/cthoyt/cookiecutter-python-package)
 template.
-
-## 🛠️ Development
-
-The final section of the README is for if you want to get involved by making a code contribution.
-
-### ❓ Testing
-
-After cloning the repository and installing `tox` with `pip install tox`, the unit tests in the `tests/` folder can be
-run reproducibly with:
-
-```shell
-$ tox
-```
-
-Additionally, these tests are automatically re-run with each commit in a [GitHub Action](https://github.com/spookylukey/table-format/actions?query=workflow%3ATests).
