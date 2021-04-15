@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 """Format Python code (list of lists) as a fixed width table."""
+import ast
 from collections import defaultdict
 
+import ast_decompiler
 import libcst
 from libcst._nodes.internal import CodegenState
 
@@ -28,8 +30,9 @@ def reformat(python_code: str, align_commas=False, guess_indent=False):
             raise AssertionError(f"Expected each sub element to be a list, found {element.value}.")
 
     # Build all reprs of elements
-    reprs = [[cst_node_to_code(element.value) for element in sublist.value.elements]
-             for sublist in code_cst.elements]
+    reprs = [[reformat_as_single_line(cst_node_to_code(element.value)) for
+              element in sublist.value.elements] for sublist in
+             code_cst.elements]
 
     # Calculate max widths
     col_widths = defaultdict(int)
@@ -147,6 +150,23 @@ def cst_node_to_code(node):
     state = CodegenState(default_indent=4, default_newline='\n')
     node._codegen(state)
     return "".join(state.tokens)
+
+
+def reformat_as_single_line(python_code):
+    code_ast = ast.parse(python_code.strip())
+    # The following has the unfortunate effect of not preserving quote style.
+    # But so far, for getting code formatted using normal PEP8 conventions, in a
+    # single line, this approach seems much easier compared to other approaches
+    # I've tried.
+    #
+    # Tried:
+    #
+    # - Using Black as a library: adds lots of vertical and horizontal
+    #   whitespace in for long argument lists etc.
+    #
+    # - Using libcst - would require complicated manipulation of whitespace elements
+    #   to produce the PEP8 spacings around operators etc.
+    return ast_decompiler.decompile(code_ast, indentation=0, line_length=100000).strip()
 
 
 def get_indent_size(text):

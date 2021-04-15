@@ -123,3 +123,23 @@ def test_preserve_comments_with_guess_indent():
     [3,   4   ],
     # Trailing stuff
 ]"""
+
+
+def test_whitespace_in_item():
+    assert reformat("""[
+    [  function_call(
+       arg1,
+       arg2 ,
+       (tuple_1,),
+       (tuple_2, x),
+     ),
+     a   +   b /2 or  3
+    ]]""") == """[
+    [function_call(arg1, arg2, (tuple_1,), (tuple_2, x)), a + b / 2 or 3],
+]"""
+
+
+# This would be nice, but hard.
+# def test_preserve_quotes():
+#     assert reformat("""[[""]]""") == """[\n    [""],\n]"""
+#     assert reformat("""[['']]""") == """[\n    [''],\n]"""
