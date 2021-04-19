@@ -35,10 +35,10 @@ You've got some tests or other code like this:
 
 def test_the_table():
     assert generate_the_table() == [
-        ['Date', 'Description', 'Amount', 'Total'],
+        ['Date', 'Description', 'Amount', 'Balance'],
         ['2021-04-06', 'Account opened', 0, 0],
-        ['2021-04-07', 'Cash deposit', 1000, 1000],
-        ['2021-04-08', 'ACME anvils', -300, 7000],
+        ['2021-04-07', 'Cash deposit at 123 Main St, Newtown, 1000, 1000],
+        ['2021-04-08', 'ACME anvils', -300, 700],
     ]
 ```
 
@@ -50,7 +50,7 @@ assert generate_the_table() == [
         "Date",
         "Description",
         "Amount",
-        "Total",
+        "Balance",
     ],
     [
         "2021-04-06",
@@ -60,7 +60,7 @@ assert generate_the_table() == [
     ],
     [
         "2021-04-07",
-        "Cash deposit",
+        "Cash deposit at 123 Main St, Newtown",
         1000,
         1000,
     ],
@@ -68,7 +68,7 @@ assert generate_the_table() == [
         "2021-04-08",
         "ACME anvils",
         -300,
-        7000,
+        700,
     ],
 ]
 ```
@@ -81,12 +81,11 @@ Copy the whole list of lists to the clipboard, then pipe to ``table-format
 ```shell
 $ xsel | table-format --guess-indent
 [
-        ['Date',       'Description',    'Amount', 'Total'],
-        ['2021-04-06', 'Account opened', 0,        0      ],
-        ['2021-04-07', 'Cash deposit',   1000,     1000   ],
-        ['2021-04-08', 'ACME anvils',    -300,     7000   ],
-    ]
-```
+        ['Date',       'Description',                          'Amount', 'Balance'],
+        ['2021-04-06', 'Account opened',                       0,        0        ],
+        ['2021-04-07', 'Cash deposit at 123 Main St, Newtown', 1000,     1000     ],
+        ['2021-04-08', 'ACME anvils',                          -300,     700      ],
+    ]```
 
 The output should be ready to paste back into your editor.
 
