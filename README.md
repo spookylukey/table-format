@@ -85,7 +85,8 @@ $ xsel | table-format --guess-indent
         ['2021-04-06', 'Account opened',                       0,        0        ],
         ['2021-04-07', 'Cash deposit at 123 Main St, Newtown', 1000,     1000     ],
         ['2021-04-08', 'ACME anvils',                          -300,     700      ],
-    ]```
+    ]
+```
 
 The output should be ready to paste back into your editor.
 
