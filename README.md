@@ -28,7 +28,7 @@
 
 Format Python code (list of lists) as a fixed width table.
 
-## Usage
+## Motivation and usage
 
 You've got some tests or other code like this:
 ```python
