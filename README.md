@@ -131,9 +131,10 @@ $ pip install -e .
 
 ## Other tips
 
-black: use `# fmt: off` and `# fmt: on` commands to stop black reformatting your
-nicely aligned columns.
+### Black
 
+Black will revert code formatted like this. But you can use `# fmt: off` and `#
+fmt: on` commands to stop black reformatting these blocks.
 
 ### Emacs
 With default keybindings, doing `C-u` `M-|` `table-format --guess-indent` `ENTER` will
@@ -159,6 +160,11 @@ You can wrap it up in a nice function like this:
    ;; show error buffer?
    t))
 ```
+
+### Other editors
+
+Contributions of instructions to make this easy to use in other editors are very
+welcome!
 
 ## ⚖️ License
 
