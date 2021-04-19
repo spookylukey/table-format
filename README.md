@@ -37,7 +37,7 @@ def test_the_table():
     assert generate_the_table() == [
         ['Date', 'Description', 'Amount', 'Balance'],
         ['2021-04-06', 'Account opened', 0, 0],
-        ['2021-04-07', 'Cash deposit at 123 Main St, Newtown, 1000, 1000],
+        ['2021-04-07', 'Cash deposit at 123 Main St, Newtown', 1000, 1000],
         ['2021-04-08', 'ACME anvils', -300, 700],
     ]
 ```
