@@ -35,12 +35,45 @@ You've got some tests or other code like this:
 
 def test_the_table():
     assert generate_the_table() == [
-        ["Date", "Name", "Projects released"],
-        ["2021-04-06", "spookylukey", 1],
+        ['Date', 'Description', 'Amount', 'Total'],
+        ['2021-04-06', 'Account opened', 0, 0],
+        ['2021-04-07', 'Cash deposit', 1000, 1000],
+        ['2021-04-08', 'ACME anvils', -300, 7000],
     ]
 ```
 
-Wouldn't it be nice if those columns lined up?
+Or maybe even worse like this:
+
+```python
+assert generate_the_table() == [
+    [
+        "Date",
+        "Description",
+        "Amount",
+        "Total",
+    ],
+    [
+        "2021-04-06",
+        "Account opened",
+        0,
+        0,
+    ],
+    [
+        "2021-04-07",
+        "Cash deposit",
+        1000,
+        1000,
+    ],
+    [
+        "2021-04-08",
+        "ACME anvils",
+        -300,
+        7000,
+    ],
+]
+```
+
+Wouldn't it be nice to have readable tests with columns all lined up?
 
 Copy the whole list of lists to the clipboard, then pipe to ``table-format
 --guess-indent``. On Linux you could use `xsel` or `xclip` etc:
@@ -48,8 +81,10 @@ Copy the whole list of lists to the clipboard, then pipe to ``table-format
 ```shell
 $ xsel | table-format --guess-indent
 [
-        ["Date",       "Name",        "Projects released"],
-        ["2021-04-06", "spookylukey", 1                  ],
+        ['Date',       'Description',    'Amount', 'Total'],
+        ['2021-04-06', 'Account opened', 0,        0      ],
+        ['2021-04-07', 'Cash deposit',   1000,     1000   ],
+        ['2021-04-08', 'ACME anvils',    -300,     7000   ],
     ]
 ```
 
