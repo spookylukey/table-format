@@ -2,6 +2,7 @@
 """Format Python code (list of lists) as a fixed width table."""
 import ast
 from collections import defaultdict
+from typing import List
 
 import ast_decompiler
 import libcst
@@ -15,7 +16,7 @@ def reformat(
         python_code: str,
         align_commas: bool = False,
         guess_indent: bool = False,
-        add_noqa: list[str] = None
+        add_noqa: List[str] = None
 ):
     """
     Reformat list of lists as fixed width table
@@ -186,7 +187,7 @@ def get_indent_size(text):
 # 'noqa: EXXX' markers:
 # We follow the formatting in https://flake8.pycqa.org/en/3.1.1/user/ignoring-errors.html
 # with some tolerance when parsing
-def add_noqa_markers(comment: str, new_noqa_items: list[str]):
+def add_noqa_markers(comment: str, new_noqa_items: List[str]):
     comment = comment.lstrip(' ').lstrip('#')
 
     existing_noqa_parts, main_comment = parse_noqa_from_comment(comment)
