@@ -1,3 +1,7 @@
+# Version 1.3 (unreleased)
+
+* Added `--add-noqa` arguments
+
 # Version 1.2 (2021-04-15)
 
 * Re-format individual items to have PEP8 whitespace and no line-breaks.
