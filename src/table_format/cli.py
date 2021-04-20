@@ -24,7 +24,8 @@ argument_parser.add_argument(
     "--guess-indent", action="store_true", help="Pass this to attempt to guess indent (from second line of text)"
 )
 argument_parser.add_argument(
-    "--add-noqa", action="store", help="A comma separated lists of 'noqa' items to add at the end of each line e.g. E202,E501"
+    "--add-noqa", action="store",
+    help="A comma separated lists of 'noqa' items to add at the end of each line e.g. E202,E501"
 )
 
 
