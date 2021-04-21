@@ -2,20 +2,30 @@
 """Format Python code (list of lists) as a fixed width table."""
 import ast
 from collections import defaultdict
+from typing import List
 
 import ast_decompiler
 import libcst
+import parsy
 from libcst._nodes.internal import CodegenState
 
 ONE_INDENT = 4  # spaces. As God intended
 FLAKE8_CHECK_STR = "# noqa:E501,E202"
 
 
-def reformat(python_code: str, align_commas=False, guess_indent=False, flake8_check=False):
+def reformat(
+        python_code: str,
+        align_commas: bool = False,
+        guess_indent: bool = False,
+        add_noqa: List[str] = None
+):
     """
     Reformat list of lists as fixed width table
     """
     # Who says your code can't just be one massive function...
+
+    if add_noqa is None:
+        add_noqa = []
     if python_code.strip() == "":
         return ""
     try:
@@ -141,8 +151,9 @@ def reformat(python_code: str, align_commas=False, guess_indent=False, flake8_ch
             post_separator = separator if align_commas else ""
             output.append(item + pre_separator + " " * (col_widths[idx] - len(item)) + post_separator)
         output.append("],")
-        if end_of_row_comment:
-            output.append('  ' + end_of_row_comment)
+        adjusted_end_of_row_comment = add_noqa_markers(end_of_row_comment, add_noqa)
+        if adjusted_end_of_row_comment:
+            output.append('  # ' + adjusted_end_of_row_comment)
         output.append("\n")
         if after_row_comment:
             for comment in after_row_comment.split('\n'):
@@ -178,3 +189,33 @@ def reformat_as_single_line(python_code):
 
 def get_indent_size(text):
     return len(text) - len(text.lstrip(" "))
+
+
+# 'noqa: EXXX' markers:
+# We follow the formatting in https://flake8.pycqa.org/en/3.1.1/user/ignoring-errors.html
+# with some tolerance when parsing
+def add_noqa_markers(comment: str, new_noqa_items: List[str]):
+    comment = comment.lstrip(' ').lstrip('#')
+
+    existing_noqa_parts, main_comment = parse_noqa_from_comment(comment)
+    noqa_parts = sorted(list(set(existing_noqa_parts) | set(new_noqa_items)))
+    if noqa_parts:
+        comment = 'noqa: ' + ','.join(noqa_parts) + '  ' + main_comment.strip()
+    else:
+        comment = main_comment
+    return comment.strip()
+
+
+# Parsing noqa bits
+noqa_start = parsy.regex(r"noqa:\s*")
+noqa_item = parsy.regex("[A-Z][0-9]+")
+noqa_full = noqa_start >> noqa_item.sep_by(parsy.string(","))
+
+
+def parse_noqa_from_comment(comment: str):
+    comment = comment.strip()
+
+    try:
+        return noqa_full.parse_partial(comment)
+    except parsy.ParseError:
+        return [], comment

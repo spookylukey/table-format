@@ -163,3 +163,17 @@ def test_whitespace_in_item():
 # def test_preserve_quotes():
 #     assert reformat("""[[""]]""") == """[\n    [""],\n]"""
 #     assert reformat("""[['']]""") == """[\n    [''],\n]"""
+
+
+def test_add_noqa():
+    assert reformat("""[
+    [abc, defg],
+    [1, 2],  # A comment here
+    [34, 56],  # noqa: X111
+    [7, 8]  # noqa:X111,X999 and a comment
+]""", add_noqa=["E202", "E501"]) == """[
+    [abc, defg],  # noqa: E202,E501
+    [1,   2   ],  # noqa: E202,E501  A comment here
+    [34,  56  ],  # noqa: E202,E501,X111
+    [7,   8   ],  # noqa: E202,E501,X111,X999  and a comment
+]"""
