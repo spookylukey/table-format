@@ -8,9 +8,10 @@ import libcst
 from libcst._nodes.internal import CodegenState
 
 ONE_INDENT = 4  # spaces. As God intended
+FLAKE8_CHECK_STR = "# noqa:E501,E202"
 
 
-def reformat(python_code: str, align_commas=False, guess_indent=False):
+def reformat(python_code: str, align_commas=False, guess_indent=False, flake8_check=False):
     """
     Reformat list of lists as fixed width table
     """
@@ -122,7 +123,13 @@ def reformat(python_code: str, align_commas=False, guess_indent=False):
 
     # Output
     output = []
-    output.append(initial_indent + "[\n")
+    
+    # check for flake8
+    if flake8_check:
+        output.append(initial_indent + "[ " + FLAKE8_CHECK_STR + "\n")
+    else:
+        output.append(initial_indent + "[\n")
+    
     for comment in initial_comments:
         output.append(indent + comment)
     for row, end_of_row_comment, after_row_comment in zip(reprs, end_of_row_comments, after_row_comments):

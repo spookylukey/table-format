@@ -125,6 +125,26 @@ def test_preserve_comments_with_guess_indent():
 ]"""
 
 
+def test_preserve_comments_with_flake8():
+    assert reformat("""[
+    # Leading stuff
+    [abc, defg],
+    # Middle stuff
+    [1, 2],
+    # More middle stuff 2
+    [3, 4]
+    # Trailing stuff
+]""", flake8_check=True) == """[ # noqa:E501,E202
+    # Leading stuff
+    [abc, defg],
+    # Middle stuff
+    [1,   2   ],
+    # More middle stuff 2
+    [3,   4   ],
+    # Trailing stuff
+]"""
+
+
 def test_whitespace_in_item():
     assert reformat("""[
     [  function_call(

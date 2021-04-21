@@ -23,6 +23,9 @@ argument_parser.add_argument("--align-commas", action="store_true", help="Pass t
 argument_parser.add_argument(
     "--guess-indent", action="store_true", help="Pass this to attempt to guess indent (from second line of text)"
 )
+argument_parser.add_argument(
+    "--flake8_check", action="store_true", help="Pass this to silence the flake8 checks"
+)
 
 
 def main():
@@ -34,6 +37,7 @@ def main():
                 input_data,
                 align_commas=args.align_commas,
                 guess_indent=args.guess_indent,
+                flake8_check=args.flake8_check,
             )
         )
     except Exception as e:
