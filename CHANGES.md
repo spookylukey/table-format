@@ -1,4 +1,4 @@
-# Version 1.3 (unreleased)
+# Version 1.3 (2021-04-22)
 
 * Added `--add-noqa` argument
 
