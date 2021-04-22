@@ -1,6 +1,6 @@
 # Version 1.3 (unreleased)
 
-* Added `--add-noqa` arguments
+* Added `--add-noqa` argument
 
 # Version 1.2 (2021-04-15)
 
@@ -17,4 +17,3 @@
 # Version 0.0.1 (2021-04-06)
 
 * Initial release
-
