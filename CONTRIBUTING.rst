@@ -71,19 +71,19 @@ To pull in upstream changes:
 .. code-block:: sh
 
     $ git remote add upstream https://github.com/spookylukey/table-format
-    $ git fetch upstream develop
+    $ git fetch upstream master
 
 Check the log to make sure the upstream changes don't affect your work too much:
 
 .. code-block:: sh
 
-    $ git log upstream/develop
+    $ git log upstream/master
 
 Then merge in the new changes:
 
 .. code-block:: sh
 
-    $ git merge upstream/develop
+    $ git merge upstream/master
 
 More information about this whole fork-pull-merge process can be found
 `here on Github's website <https://help.github.com/articles/fork-a-repo/>`_.
