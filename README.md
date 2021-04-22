@@ -13,7 +13,7 @@
         <img alt="Tests" src="https://github.com/spookylukey/table-format/workflows/Tests/badge.svg" />
     </a>
     <a href="https://github.com/cthoyt/cookiecutter-python-package">
-        <img alt="Cookiecutter template from @cthoyt" src="https://img.shields.io/badge/Cookiecutter-python--package-yellow" /> 
+        <img alt="Cookiecutter template from @cthoyt" src="https://img.shields.io/badge/Cookiecutter-python--package-yellow" />
     </a>
     <a href="https://pypi.org/project/table-format">
         <img alt="PyPI" src="https://img.shields.io/pypi/v/table-format" />
@@ -135,6 +135,23 @@ $ pip install -e .
 
 Black will revert code formatted like this. But you can use `# fmt: off` and `#
 fmt: on` commands to stop black reformatting these blocks.
+
+### Flake8
+
+Flake8 might complain about:
+
+- E202 - whitespace before `]`
+- E241 - multiple spaces after comma
+- E501 - line too long
+
+You can silence these using `noqa:E202,E241,E501`, which you can automatically
+add to the end of each line like this:
+
+```bash
+$ table-format --add-noqa=E202,E241,E501
+```
+
+Other ``noqa`` items and other end of line comments will be preserved.
 
 ### Emacs
 With default keybindings, doing `C-u` `M-|` `table-format --guess-indent` `ENTER` will
