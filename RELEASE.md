@@ -1,8 +1,17 @@
 # 📦 Making a Release
 
-After installing the package in development mode and installing
-`tox` with `pip install tox`, the commands for making a new release are contained within the `finish` environment
-in `tox.ini`. Run the following from the shell:
+First check everything is passing, using tox or [GitHub
+Actions](https://github.com/spookylukey/table-format/actions?query=workflow%3ATests).
+
+Update CHANGES.md with the current release date, and commit.
+
+Install twine:
+
+```shell
+$ pip install twine
+```
+
+Bump the version number by running the following from the shell:
 
 ```shell
 $ bumpversion release
@@ -27,3 +36,4 @@ Afterwards, you should do:
 $ bumpversion patch
 ```
 
+Add a new section to CHANGES.md, with `Version $NEXTVERSION (unreleased)`.
