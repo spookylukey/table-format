@@ -5,12 +5,6 @@ Actions](https://github.com/spookylukey/table-format/actions?query=workflow%3ATe
 
 Update CHANGES.md with the current release date, and commit.
 
-Install twine:
-
-```shell
-$ pip install twine
-```
-
 Bump the version number by running the following from the shell:
 
 ```shell
@@ -28,7 +22,7 @@ This script does the following:
 
 1. Packages the code in both a tar archive and a wheel
 2. Uploads to PyPI using `twine`. Be sure to have a `.pypirc` file configured to
-   avoid the need for manual input at this step
+   avoid the need for manual input at this step. Requires `pip install twine` first.
 3. Pushes to GitHub.
 
 Afterwards, you should do:
