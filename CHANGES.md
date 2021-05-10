@@ -1,3 +1,5 @@
+# Version 1.3.2 (unreleased)
+
 # Version 1.3.1 (2021-05-10)
 
 * Fixed crasher introduced in previous version if `--add-noqa` was not passed
