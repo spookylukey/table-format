@@ -38,7 +38,7 @@ def main():
                 input_data,
                 align_commas=args.align_commas,
                 guess_indent=args.guess_indent,
-                add_noqa=args.add_noqa.split(','),
+                add_noqa=args.add_noqa.split(',') if args.add_noqa else None,
             )
         )
     except Exception as e:
