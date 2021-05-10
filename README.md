@@ -76,7 +76,12 @@ assert generate_the_table() == [
 Wouldn't it be nice to have readable tests with columns all lined up?
 
 Copy the whole list of lists to the clipboard, then pipe to ``table-format
---guess-indent``. On Linux you could use `xsel` or `xclip` etc:
+--guess-indent``:
+* on Linux you can use `xsel` or `xclip`
+* on MacOS you can use `pbpaste`
+* on Windows Powershell you can use `Get-Clipboard`
+
+Linux example:
 
 ```shell
 $ xsel | table-format --guess-indent
