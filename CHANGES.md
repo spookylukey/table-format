@@ -1,4 +1,6 @@
-# Version 1.3.2 (unreleased)
+# Version 1.3.3 (unreleased)
+
+# Version 1.3.2 (2021-06-15)
 
 * Fixed crasher with blank lines
 
