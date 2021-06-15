@@ -87,7 +87,7 @@ def reformat(
     # Comments before first row
     if hasattr(code_cst.lbracket.whitespace_after, 'empty_lines'):
         initial_comments = [
-            line.comment.value + "\n"
+            (line.comment.value if line.comment is not None else '') + "\n"
             for line in code_cst.lbracket.whitespace_after.empty_lines
         ]
     else:
@@ -124,7 +124,7 @@ def reformat(
     # Comments on their own lines after the last row
     if hasattr(code_cst.rbracket.whitespace_before, 'empty_lines'):
         final_comments = [
-            line.comment.value + "\n"
+            (line.comment.value if line.comment is not None else '') + "\n"
             for line in code_cst.rbracket.whitespace_before.empty_lines
         ]
     else:
@@ -134,7 +134,7 @@ def reformat(
     output = []
     output.append(initial_indent + "[\n")
     for comment in initial_comments:
-        output.append(indent + comment)
+        append_comment(output, indent, comment)
     for row, end_of_row_comment, after_row_comment in zip(reprs, end_of_row_comments, after_row_comments):
         output.append(indent + "[")
         for idx, item in enumerate(row):
@@ -152,7 +152,7 @@ def reformat(
             for comment in after_row_comment.split('\n'):
                 output.append(indent + comment + '\n')
     for comment in final_comments:
-        output.append(indent + comment)
+        append_comment(output, indent, comment)
     output.append(final_indent + "]")
     return "".join(output)
 
@@ -161,6 +161,16 @@ def cst_node_to_code(node):
     state = CodegenState(default_indent=4, default_newline='\n')
     node._codegen(state)
     return "".join(state.tokens)
+
+
+def append_comment(output, indent, comment):
+    line = indent + comment
+    if not line.strip():
+        # Whitespace only, preserve only vertical whitespace
+        # so that we're not adding trailing whitespace to lines
+        output.append(line.lstrip(" "))
+    else:
+        output.append(line)
 
 
 def reformat_as_single_line(python_code):

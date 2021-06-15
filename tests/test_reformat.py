@@ -157,3 +157,16 @@ def test_add_noqa():
     [34,  56  ],  # noqa: E202,E501,X111
     [7,   8   ],  # noqa: E202,E501,X111,X999  and a comment
 ]"""
+
+
+def test_whitespace_lines_and_comments():
+    assert reformat("""
+[
+
+    [], #   """"""
+
+]    """) == """[
+
+    [],
+
+]"""
