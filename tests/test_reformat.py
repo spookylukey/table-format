@@ -170,3 +170,36 @@ def test_whitespace_lines_and_comments():
     [],
 
 ]"""
+
+
+def test_comments_and_blank_lines():
+    assert reformat("""
+[
+
+    # line comment 1
+    [],  # end of line comment
+    # line comment 2
+
+    #
+
+    # line comment 3
+
+    # line comment 4
+    [],
+    # line comment 5
+
+]    """) == """[
+
+    # line comment 1
+    [],  # end of line comment
+    # line comment 2
+
+    #
+
+    # line comment 3
+
+    # line comment 4
+    [],
+    # line comment 5
+
+]"""

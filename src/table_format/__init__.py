@@ -116,7 +116,8 @@ def reformat(
     after_row_comments = []
     for element in code_cst.elements:
         if hasattr(element.comma, 'whitespace_after') and hasattr(element.comma.whitespace_after, 'empty_lines'):
-            comment = '\n'.join(line.comment.value for line in element.comma.whitespace_after.empty_lines)
+            comment = '\n'.join(getattr(line.comment, 'value', '')
+                                for line in element.comma.whitespace_after.empty_lines)
         else:
             comment = ''
         after_row_comments.append(comment)
@@ -150,7 +151,10 @@ def reformat(
         output.append("\n")
         if after_row_comment:
             for comment in after_row_comment.split('\n'):
-                output.append(indent + comment + '\n')
+                if comment.strip():
+                    output.append(indent + comment + '\n')
+                else:
+                    output.append('\n')
     for comment in final_comments:
         append_comment(output, indent, comment)
     output.append(final_indent + "]")
