@@ -203,3 +203,25 @@ def test_comments_and_blank_lines():
     # line comment 5
 
 ]"""
+
+
+def test_reformat_tuples():
+    assert reformat("""
+[
+    (1, 2, 3),
+    (45, 67, 89),
+]    """) == """[
+    (1,  2,  3 ),
+    (45, 67, 89),
+]"""
+
+
+def test_reformat_mixed_lists_tuples():
+    assert reformat("""
+[
+    (1, 2, 3),
+    ['a', 'b', 'c'],
+]    """) == """[
+    (1,   2,   3  ),
+    ['a', 'b', 'c'],
+]"""

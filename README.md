@@ -136,6 +136,10 @@ $ pip install -e .
 
 ## Other tips
 
+### Tuples
+
+We also support having lists of tuples as well as lists of lists, and this will be preserved.
+
 ### Black
 
 Black will revert code formatted like this. But you can use `# fmt: off` and `#

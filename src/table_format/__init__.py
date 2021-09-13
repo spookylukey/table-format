@@ -12,6 +12,18 @@ from libcst._nodes.internal import CodegenState
 ONE_INDENT = 4  # spaces. As God intended
 
 
+OPENER = {
+    libcst.List: "[",
+    libcst.Tuple: "(",
+}
+
+
+CLOSER = {
+    libcst.List: "]",
+    libcst.Tuple: ")",
+}
+
+
 def reformat(
         python_code: str,
         align_commas: bool = False,
@@ -36,13 +48,17 @@ def reformat(
     if not isinstance(code_cst, libcst.List):
         raise AssertionError("Expected a list expression as single input expression.")
     for element in code_cst.elements:
-        if not isinstance(element.value, libcst.List):
-            raise AssertionError(f"Expected each sub element to be a list, found {element.value}.")
+        if not isinstance(element.value, (libcst.List, libcst.Tuple)):
+            raise AssertionError(f"Expected each sub element to be a list or tuple, found {element.value}.")
 
     # Build all reprs of elements
     reprs = [[reformat_as_single_line(cst_node_to_code(element.value)) for
               element in sublist.value.elements] for sublist in
              code_cst.elements]
+    row_types = [
+        type(element.value)
+        for element in code_cst.elements
+    ]
 
     # Calculate max widths
     col_widths = defaultdict(int)
@@ -136,15 +152,17 @@ def reformat(
     output.append(initial_indent + "[\n")
     for comment in initial_comments:
         append_comment(output, indent, comment)
-    for row, end_of_row_comment, after_row_comment in zip(reprs, end_of_row_comments, after_row_comments):
-        output.append(indent + "[")
+    for row, row_type, end_of_row_comment, after_row_comment in zip(
+            reprs, row_types, end_of_row_comments, after_row_comments
+    ):
+        output.append(indent + OPENER[row_type])
         for idx, item in enumerate(row):
             need_comma = idx < len(row) - 1
             separator = ", " if need_comma else ""
             pre_separator = "" if align_commas else separator
             post_separator = separator if align_commas else ""
             output.append(item + pre_separator + " " * (col_widths[idx] - len(item)) + post_separator)
-        output.append("],")
+        output.append(CLOSER[row_type] + ",")
         adjusted_end_of_row_comment = add_noqa_markers(end_of_row_comment, add_noqa)
         if adjusted_end_of_row_comment:
             output.append('  # ' + adjusted_end_of_row_comment)
