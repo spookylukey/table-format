@@ -1,4 +1,4 @@
-# Version 1.4 (unreleased)
+# Version 1.4 (2021-09-14)
 
 * Support lists of tuples as well as lists of lists
 * Align end of line comments when there are ragged rows
