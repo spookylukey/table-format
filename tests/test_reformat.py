@@ -105,6 +105,32 @@ def test_preserve_comments_at_ends_of_lines():
 ]"""
 
 
+def test_align_end_of_line_comments_with_ragged_rows():
+    assert reformat("""[
+    [abc, de],    # C1
+    [1, 2, 3],    # C2
+    [4, 5, 6, 7], # C3
+    []            # C4
+]""") == """[
+    [abc, de],        # C1
+    [1,   2,  3],     # C2
+    [4,   5,  6, 7],  # C3
+    [],               # C4
+]"""
+
+
+def test_align_end_of_line_comments_with_ragged_rows_and_align_commas():
+    assert reformat("""[
+    [abc, de],    # C1
+    [1, 2, 3],    # C2
+    [4, 5, 6, 7], # C3
+]""", align_commas=True) == """[
+    [abc, de],        # C1
+    [1  , 2 , 3],     # C2
+    [4  , 5 , 6, 7],  # C3
+]"""
+
+
 def test_preserve_comments_with_guess_indent():
     assert reformat("""[
     # Leading stuff

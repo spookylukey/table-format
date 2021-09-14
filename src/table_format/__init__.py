@@ -24,6 +24,9 @@ CLOSER = {
 }
 
 
+ITEM_SEP = ", "
+
+
 def reformat(
         python_code: str,
         align_commas: bool = False,
@@ -62,9 +65,12 @@ def reformat(
 
     # Calculate max widths
     col_widths = defaultdict(int)
+    col_count = 0
     for row in reprs:
+        idx = 0
         for idx, item in enumerate(row):
             col_widths[idx] = max(col_widths[idx], len(item))
+        col_count = max(col_count, idx + 1)
 
     # Indents
     indent = " " * ONE_INDENT
@@ -156,16 +162,23 @@ def reformat(
             reprs, row_types, end_of_row_comments, after_row_comments
     ):
         output.append(indent + OPENER[row_type])
+        last_idx = -1
         for idx, item in enumerate(row):
             need_comma = idx < len(row) - 1
-            separator = ", " if need_comma else ""
+            separator = ITEM_SEP if need_comma else ""
             pre_separator = "" if align_commas else separator
             post_separator = separator if align_commas else ""
             output.append(item + pre_separator + " " * (col_widths[idx] - len(item)) + post_separator)
+            last_idx = idx
         output.append(CLOSER[row_type] + ",")
         adjusted_end_of_row_comment = add_noqa_markers(end_of_row_comment, add_noqa)
         if adjusted_end_of_row_comment:
-            output.append('  # ' + adjusted_end_of_row_comment)
+            # padding for ragged rows:
+            comment_padding = sum(
+                col_widths[i] + (len(ITEM_SEP) if i > 0 else 0)
+                for i in range(last_idx + 1, col_count)
+            )
+            output.append(' ' * comment_padding + '  # ' + adjusted_end_of_row_comment)
         output.append("\n")
         if after_row_comment:
             for comment in after_row_comment.split('\n'):
