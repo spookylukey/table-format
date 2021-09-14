@@ -11,4 +11,7 @@ VERSION=$(./setup.py --version) || exit 1
 
 twine upload dist/table-format-$VERSION.tar.gz dist/table_format-$VERSION-py3-none-any.whl || exit 1
 
+git tag "v$VERSION"
+
 git push
+git push --tags
