@@ -1,4 +1,6 @@
-# Version 1.4.1 (unreleased)
+# Version 1.4.2 (unreleased)
+
+# Version 1.4.1 (2021-11-26)
 
 * Fixed issue with nested tuples being removed
 
