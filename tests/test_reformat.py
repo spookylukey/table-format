@@ -1,3 +1,5 @@
+# fmt: off
+# Black tends to obfuscate these tests, turned off for whole file
 import pytest
 
 from table_format import reformat, reformat_as_single_line

@@ -1,3 +1,6 @@
+# fmt: off
+# Black tends to obfuscate these tests, turned off for whole file
+
 import subprocess
 
 

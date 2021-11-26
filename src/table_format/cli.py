@@ -18,14 +18,21 @@ __all__ = ["main"]
 
 from . import reformat
 
-argument_parser = argparse.ArgumentParser(usage="Reads Python code from stdin and prints reformatted code to stdout")
-argument_parser.add_argument("--align-commas", action="store_true", help="Pass this to make commas aligned")
-argument_parser.add_argument(
-    "--guess-indent", action="store_true", help="Pass this to attempt to guess indent (from second line of text)"
+argument_parser = argparse.ArgumentParser(
+    usage="Reads Python code from stdin and prints reformatted code to stdout"
 )
 argument_parser.add_argument(
-    "--add-noqa", action="store",
-    help="A comma separated lists of 'noqa' items to add at the end of each line e.g. E202,E501"
+    "--align-commas", action="store_true", help="Pass this to make commas aligned"
+)
+argument_parser.add_argument(
+    "--guess-indent",
+    action="store_true",
+    help="Pass this to attempt to guess indent (from second line of text)",
+)
+argument_parser.add_argument(
+    "--add-noqa",
+    action="store",
+    help="A comma separated lists of 'noqa' items to add at the end of each line e.g. E202,E501",
 )
 
 
@@ -38,7 +45,7 @@ def main():
                 input_data,
                 align_commas=args.align_commas,
                 guess_indent=args.guess_indent,
-                add_noqa=args.add_noqa.split(',') if args.add_noqa else None,
+                add_noqa=args.add_noqa.split(",") if args.add_noqa else None,
             )
         )
     except Exception as e:

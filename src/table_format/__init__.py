@@ -28,10 +28,10 @@ ITEM_SEP = ", "
 
 
 def reformat(
-        python_code: str,
-        align_commas: bool = False,
-        guess_indent: bool = False,
-        add_noqa: List[str] = None
+    python_code: str,
+    align_commas: bool = False,
+    guess_indent: bool = False,
+    add_noqa: List[str] = None,
 ):
     """
     Reformat list of lists as fixed width table
@@ -52,16 +52,19 @@ def reformat(
         raise AssertionError("Expected a list expression as single input expression.")
     for element in code_cst.elements:
         if not isinstance(element.value, (libcst.List, libcst.Tuple)):
-            raise AssertionError(f"Expected each sub element to be a list or tuple, found {element.value}.")
+            raise AssertionError(
+                f"Expected each sub element to be a list or tuple, found {element.value}."
+            )
 
     # Build all reprs of elements
-    reprs = [[reformat_as_single_line(cst_node_to_code(element.value)) for
-              element in sublist.value.elements] for sublist in
-             code_cst.elements]
-    row_types = [
-        type(element.value)
-        for element in code_cst.elements
+    reprs = [
+        [
+            reformat_as_single_line(cst_node_to_code(element.value))
+            for element in sublist.value.elements
+        ]
+        for sublist in code_cst.elements
     ]
+    row_types = [type(element.value) for element in code_cst.elements]
 
     # Calculate max widths
     col_widths = defaultdict(int)
@@ -91,8 +94,8 @@ def reformat(
         #
         # The user has selected text from first '['
         # We remove any comment lines
-        lines = python_code.strip().split('\n')
-        lines = [line for line in lines if not line.strip().startswith('#')]
+        lines = python_code.strip().split("\n")
+        lines = [line for line in lines if not line.strip().startswith("#")]
         if len(lines) > 1:
             indent_size = get_indent_size(lines[1])
             indent = " " * indent_size
@@ -107,9 +110,9 @@ def reformat(
     # so it might be simpler this way.
 
     # Comments before first row
-    if hasattr(code_cst.lbracket.whitespace_after, 'empty_lines'):
+    if hasattr(code_cst.lbracket.whitespace_after, "empty_lines"):
         initial_comments = [
-            (line.comment.value if line.comment is not None else '') + "\n"
+            (line.comment.value if line.comment is not None else "") + "\n"
             for line in code_cst.lbracket.whitespace_after.empty_lines
         ]
     else:
@@ -119,35 +122,40 @@ def reformat(
     end_of_row_comments = []
     for element in code_cst.elements:
         if (
-                hasattr(element.comma, 'whitespace_after')
-                and hasattr(element.comma.whitespace_after, 'first_line')
-                and getattr(element.comma.whitespace_after.first_line, 'comment', None)
+            hasattr(element.comma, "whitespace_after")
+            and hasattr(element.comma.whitespace_after, "first_line")
+            and getattr(element.comma.whitespace_after.first_line, "comment", None)
         ):
             comment = element.comma.whitespace_after.first_line.comment.value
         else:
-            comment = ''
+            comment = ""
         end_of_row_comments.append(comment)
     # Last row comment is attached to rbracket of main expression
-    if (
-            hasattr(code_cst.rbracket.whitespace_before, 'first_line')
-            and getattr(code_cst.rbracket.whitespace_before.first_line, 'comment', None)
+    if hasattr(code_cst.rbracket.whitespace_before, "first_line") and getattr(
+        code_cst.rbracket.whitespace_before.first_line, "comment", None
     ):
-        end_of_row_comments[-1] = code_cst.rbracket.whitespace_before.first_line.comment.value
+        end_of_row_comments[
+            -1
+        ] = code_cst.rbracket.whitespace_before.first_line.comment.value
 
     # Comments on their own lines after each row - these will be paired with rows
     after_row_comments = []
     for element in code_cst.elements:
-        if hasattr(element.comma, 'whitespace_after') and hasattr(element.comma.whitespace_after, 'empty_lines'):
-            comment = '\n'.join(getattr(line.comment, 'value', '')
-                                for line in element.comma.whitespace_after.empty_lines)
+        if hasattr(element.comma, "whitespace_after") and hasattr(
+            element.comma.whitespace_after, "empty_lines"
+        ):
+            comment = "\n".join(
+                getattr(line.comment, "value", "")
+                for line in element.comma.whitespace_after.empty_lines
+            )
         else:
-            comment = ''
+            comment = ""
         after_row_comments.append(comment)
 
     # Comments on their own lines after the last row
-    if hasattr(code_cst.rbracket.whitespace_before, 'empty_lines'):
+    if hasattr(code_cst.rbracket.whitespace_before, "empty_lines"):
         final_comments = [
-            (line.comment.value if line.comment is not None else '') + "\n"
+            (line.comment.value if line.comment is not None else "") + "\n"
             for line in code_cst.rbracket.whitespace_before.empty_lines
         ]
     else:
@@ -159,7 +167,7 @@ def reformat(
     for comment in initial_comments:
         append_comment(output, indent, comment)
     for row, row_type, end_of_row_comment, after_row_comment in zip(
-            reprs, row_types, end_of_row_comments, after_row_comments
+        reprs, row_types, end_of_row_comments, after_row_comments
     ):
         output.append(indent + OPENER[row_type])
         last_idx = -1
@@ -168,7 +176,12 @@ def reformat(
             separator = ITEM_SEP if need_comma else ""
             pre_separator = "" if align_commas else separator
             post_separator = separator if align_commas else ""
-            output.append(item + pre_separator + " " * (col_widths[idx] - len(item)) + post_separator)
+            output.append(
+                item
+                + pre_separator
+                + " " * (col_widths[idx] - len(item))
+                + post_separator
+            )
             last_idx = idx
         output.append(CLOSER[row_type] + ",")
         adjusted_end_of_row_comment = add_noqa_markers(end_of_row_comment, add_noqa)
@@ -178,14 +191,14 @@ def reformat(
                 col_widths[i] + (len(ITEM_SEP) if i > 0 else 0)
                 for i in range(last_idx + 1, col_count)
             )
-            output.append(' ' * comment_padding + '  # ' + adjusted_end_of_row_comment)
+            output.append(" " * comment_padding + "  # " + adjusted_end_of_row_comment)
         output.append("\n")
         if after_row_comment:
-            for comment in after_row_comment.split('\n'):
+            for comment in after_row_comment.split("\n"):
                 if comment.strip():
-                    output.append(indent + comment + '\n')
+                    output.append(indent + comment + "\n")
                 else:
-                    output.append('\n')
+                    output.append("\n")
     for comment in final_comments:
         append_comment(output, indent, comment)
     output.append(final_indent + "]")
@@ -193,7 +206,7 @@ def reformat(
 
 
 def cst_node_to_code(node):
-    state = CodegenState(default_indent=4, default_newline='\n')
+    state = CodegenState(default_indent=4, default_newline="\n")
     node._codegen(state)
     return "".join(state.tokens)
 
@@ -222,7 +235,9 @@ def reformat_as_single_line(python_code):
     #
     # - Using libcst - would require complicated manipulation of whitespace elements
     #   to produce the PEP8 spacings around operators etc.
-    reformatted = ast_decompiler.decompile(code_ast, indentation=0, line_length=100000).strip()
+    reformatted = ast_decompiler.decompile(
+        code_ast, indentation=0, line_length=100000
+    ).strip()
 
     # This has the unfortunate problem of stripping `(` and `)` for tuples, which is not what we want
     if isinstance(code_ast.body[0].value, ast.Tuple):
