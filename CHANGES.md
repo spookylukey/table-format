@@ -1,5 +1,7 @@
 # Version 1.4.1 (unreleased)
 
+* Fixed issue with nested tuples being removed
+
 # Version 1.4 (2021-09-14)
 
 * Support lists of tuples as well as lists of lists

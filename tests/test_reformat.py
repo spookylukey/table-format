@@ -1,6 +1,6 @@
 import pytest
 
-from table_format import reformat
+from table_format import reformat, reformat_as_single_line
 
 
 def test_reformat_empty():
@@ -251,3 +251,23 @@ def test_reformat_mixed_lists_tuples():
     (1,   2,   3  ),
     ['a', 'b', 'c'],
 ]"""
+
+
+def test_reformat_nested_tuples():
+    assert reformat("""[
+    [(1, 2), (3, 4)],
+]""") == """[
+    [(1, 2), (3, 4)],
+]"""
+
+
+def test_reformat_nested_lists():
+    assert reformat("""[
+    [[1, 2], [3, 4]],
+]""") == """[
+    [[1, 2], [3, 4]],
+]"""
+
+
+def test_reformat_as_single_line_tuple():
+    assert reformat_as_single_line("(1, 2)") == "(1, 2)"

@@ -222,7 +222,12 @@ def reformat_as_single_line(python_code):
     #
     # - Using libcst - would require complicated manipulation of whitespace elements
     #   to produce the PEP8 spacings around operators etc.
-    return ast_decompiler.decompile(code_ast, indentation=0, line_length=100000).strip()
+    reformatted = ast_decompiler.decompile(code_ast, indentation=0, line_length=100000).strip()
+
+    # This has the unfortunate problem of stripping `(` and `)` for tuples, which is not what we want
+    if isinstance(code_ast.body[0].value, ast.Tuple):
+        reformatted = f"({reformatted})"
+    return reformatted
 
 
 def get_indent_size(text):
@@ -233,12 +238,12 @@ def get_indent_size(text):
 # We follow the formatting in https://flake8.pycqa.org/en/3.1.1/user/ignoring-errors.html
 # with some tolerance when parsing
 def add_noqa_markers(comment: str, new_noqa_items: List[str]):
-    comment = comment.lstrip(' ').lstrip('#')
+    comment = comment.lstrip(" ").lstrip("#")
 
     existing_noqa_parts, main_comment = parse_noqa_from_comment(comment)
     noqa_parts = sorted(list(set(existing_noqa_parts) | set(new_noqa_items)))
     if noqa_parts:
-        comment = 'noqa: ' + ','.join(noqa_parts) + '  ' + main_comment.strip()
+        comment = "noqa: " + ",".join(noqa_parts) + "  " + main_comment.strip()
     else:
         comment = main_comment
     return comment.strip()
