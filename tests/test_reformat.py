@@ -273,3 +273,29 @@ def test_reformat_nested_lists():
 
 def test_reformat_as_single_line_tuple():
     assert reformat_as_single_line("(1, 2)") == "(1, 2)"
+
+
+def test_reformat_as_single_line_string():
+    assert reformat_as_single_line("""
+    "x"
+    """) == """
+    'x'
+    """.strip()
+
+    assert reformat_as_single_line("""
+    'x'
+    """) == """
+    'x'
+    """.strip()
+
+    assert reformat_as_single_line("""
+    "x'x"
+    """) == """
+    'x\\'x'
+    """.strip()
+
+    assert reformat_as_single_line("""
+    'x"x'
+    """) == """
+    'x"x'
+    """.strip()
