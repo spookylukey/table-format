@@ -2,7 +2,7 @@
 # Black tends to obfuscate these tests, turned off for whole file
 import pytest
 
-from table_format import reformat, reformat_as_single_line
+from table_format import QuoteStyle, reformat, reformat_as_single_line
 
 
 def test_reformat_empty():
@@ -315,4 +315,30 @@ def test_reformat_as_single_line_fstring():
     f"{'x'}"
     """) == """
     f'{"x"}'
+    """.strip()
+
+
+def test_reformat_as_single_line_prefer_double_quotes():
+    assert reformat_as_single_line("""
+    "x"
+    """, quote_style=QuoteStyle.DOUBLE) == """
+    "x"
+    """.strip()
+
+    assert reformat_as_single_line("""
+    'x"x'
+    """, quote_style=QuoteStyle.DOUBLE) == """
+    "x\\"x"
+    """.strip()
+
+    assert reformat_as_single_line("""
+    f"{x}"
+    """, quote_style=QuoteStyle.DOUBLE) == """
+    f"{x}"
+    """.strip()
+
+    assert reformat_as_single_line("""
+    f"{'x'}"
+    """, quote_style=QuoteStyle.DOUBLE) == """
+    f"{'x'}"
     """.strip()

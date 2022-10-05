@@ -145,6 +145,10 @@ We also support having lists of tuples as well as lists of lists, and this will 
 Black will revert code formatted like this. But you can use `# fmt: off` and `#
 fmt: on` commands to stop black reformatting these blocks.
 
+To format quotes more similarly to Black style, use ``--quote-style=double``
+(this won’t be exactly the same as Black, it just switches to double quotes
+instead of single).
+
 ### Flake8
 
 Flake8 might complain about:

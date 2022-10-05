@@ -16,7 +16,7 @@ import sys
 
 __all__ = ["main"]
 
-from . import reformat
+from . import QuoteStyle, reformat
 
 argument_parser = argparse.ArgumentParser(usage="Reads Python code from stdin and prints reformatted code to stdout")
 argument_parser.add_argument("--align-commas", action="store_true", help="Pass this to make commas aligned")
@@ -30,6 +30,13 @@ argument_parser.add_argument(
     action="store",
     help="A comma separated lists of 'noqa' items to add at the end of each line e.g. E202,E501",
 )
+argument_parser.add_argument(
+    "--quote-style",
+    action="store",
+    default="single",
+    choices=[q.value for q in QuoteStyle],
+    help="Choose which type of quote to prefer for writing strings.",
+)
 
 
 def main():
@@ -42,6 +49,7 @@ def main():
                 align_commas=args.align_commas,
                 guess_indent=args.guess_indent,
                 add_noqa=args.add_noqa.split(",") if args.add_noqa else None,
+                quote_style=QuoteStyle(args.quote_style),
             )
         )
     except Exception as e:

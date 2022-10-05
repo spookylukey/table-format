@@ -1,10 +1,13 @@
 # -*- coding: utf-8 -*-
 """Format Python code (list of lists) as a fixed width table."""
 import ast
+import enum
+import sys
 from collections import defaultdict
+from contextlib import contextmanager
 from typing import List
 
-import ast_decompiler
+import ast_decompiler.decompiler
 import libcst
 import parsy
 from libcst._nodes.internal import CodegenState
@@ -27,11 +30,17 @@ CLOSER = {
 ITEM_SEP = ", "
 
 
+class QuoteStyle(enum.Enum):
+    SINGLE = "single"
+    DOUBLE = "double"
+
+
 def reformat(
     python_code: str,
     align_commas: bool = False,
     guess_indent: bool = False,
     add_noqa: List[str] = None,
+    quote_style: QuoteStyle = QuoteStyle.SINGLE,
 ):
     """
     Reformat list of lists as fixed width table
@@ -56,7 +65,10 @@ def reformat(
 
     # Build all reprs of elements
     reprs = [
-        [reformat_as_single_line(cst_node_to_code(element.value)) for element in sublist.value.elements]
+        [
+            reformat_as_single_line(cst_node_to_code(element.value), quote_style=quote_style)
+            for element in sublist.value.elements
+        ]
         for sublist in code_cst.elements
     ]
     row_types = [type(element.value) for element in code_cst.elements]
@@ -205,7 +217,7 @@ def append_comment(output, indent, comment):
         output.append(line)
 
 
-def reformat_as_single_line(python_code):
+def reformat_as_single_line(python_code, quote_style: QuoteStyle = QuoteStyle.SINGLE):
     code_ast = ast.parse(python_code.strip())
     # The following has the unfortunate effect of not preserving quote style.
     # But so far, for getting code formatted using normal PEP8 conventions, in a
@@ -221,12 +233,58 @@ def reformat_as_single_line(python_code):
     #   to produce the PEP8 spacings around operators etc. ast_decompiler does approx
     #   PEP8 formatting by default.
 
-    reformatted = ast_decompiler.decompile(code_ast, indentation=0, line_length=100000).strip()
+    reformatted = ast_decompiler_decompile(code_ast, quote_style=quote_style).strip()
 
     # This has the unfortunate problem of stripping `(` and `)` for tuples, which is not what we want
     if isinstance(code_ast.body[0].value, ast.Tuple):
         reformatted = f"({reformatted})"
     return reformatted
+
+
+# Similar to ast_decompiler.decompile, with our modifications
+def ast_decompiler_decompile(code_ast, quote_style=QuoteStyle.SINGLE):
+    decompiler = CustomDecompiler(
+        indentation=0,
+        line_length=1000000,
+        starting_indentation=0,
+        quote_style=quote_style,
+    )
+    return decompiler.run(code_ast)
+
+
+class CustomDecompiler(ast_decompiler.decompiler.Decompiler):
+    def __init__(self, indentation, line_length, starting_indentation, quote_style=QuoteStyle.SINGLE):
+        super().__init__(indentation, line_length, starting_indentation)
+        self.quote_style = quote_style
+
+    def _get_quote_styles(self):
+        default_quote = "'" if self.quote_style == QuoteStyle.SINGLE else '"'
+        other_quote = '"' if default_quote == "'" else "'"
+        return default_quote, other_quote
+
+    def write_string(self, string_value, kind=None):
+        # Copy paste from super()
+        if kind is not None:
+            self.write(kind)
+        default_quote, other_quote = self._get_quote_styles()
+        if sys.version_info >= (3, 6) and self.has_parent_of_type(ast.FormattedValue):
+            delimiter = other_quote
+        else:
+            delimiter = default_quote
+        self.write(delimiter)
+        s = string_value.encode("unicode-escape").decode("ascii")
+        self.write(s.replace(delimiter, "\\" + delimiter))
+        self.write(delimiter)
+
+    @contextmanager
+    def f_literalise_if(self, condition):
+        if condition:
+            default_quote, _ = self._get_quote_styles()
+            self.write("f" + default_quote)
+            yield
+            self.write(default_quote)
+        else:
+            yield
 
 
 def get_indent_size(text):
