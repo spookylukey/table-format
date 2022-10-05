@@ -1,4 +1,4 @@
-# Version 1.4.2 (unreleased)
+# Version 1.4.2 (2022-10-05)
 
 * Added `--quote-style=double`
 
