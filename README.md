@@ -153,8 +153,14 @@ Flake8 might complain about:
 - E241 - multiple spaces after comma
 - E501 - line too long
 
-You can silence these using `noqa:E202,E241,E501`, which you can automatically
-add to the end of each line like this:
+
+The simplest solution is to silence those flake8 errors globally in your config,
+especially if you are using a formatter like Black which will enforce those same
+rules for you automatically.
+
+Otherwise, you can silence the errors on a per-line basis using
+`noqa:E202,E241,E501`, which you can automatically add to the end of each line
+like this:
 
 ```bash
 $ table-format --add-noqa=E202,E241,E501
@@ -208,8 +214,18 @@ a code contribution.
 
 ### ❓ Testing
 
-After cloning the repository and installing `tox` with `pip install tox`, the
-unit tests in the `tests/` folder can be run reproducibly with:
+After cloning the repository, install dev requirements:
+
+```shell
+pip install -r requirements-dev.txt
+```
+
+And run pytest:
+```shell
+pytest
+```
+
+To test across all environments:
 
 ```shell
 $ tox

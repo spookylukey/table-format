@@ -9,3 +9,5 @@ pep8-naming
 pydocstyle
 isort==5.6.4
 bumpversion
+pytest
+tox
