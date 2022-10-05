@@ -52,16 +52,11 @@ def reformat(
         raise AssertionError("Expected a list expression as single input expression.")
     for element in code_cst.elements:
         if not isinstance(element.value, (libcst.List, libcst.Tuple)):
-            raise AssertionError(
-                f"Expected each sub element to be a list or tuple, found {element.value}."
-            )
+            raise AssertionError(f"Expected each sub element to be a list or tuple, found {element.value}.")
 
     # Build all reprs of elements
     reprs = [
-        [
-            reformat_as_single_line(cst_node_to_code(element.value))
-            for element in sublist.value.elements
-        ]
+        [reformat_as_single_line(cst_node_to_code(element.value)) for element in sublist.value.elements]
         for sublist in code_cst.elements
     ]
     row_types = [type(element.value) for element in code_cst.elements]
@@ -134,19 +129,14 @@ def reformat(
     if hasattr(code_cst.rbracket.whitespace_before, "first_line") and getattr(
         code_cst.rbracket.whitespace_before.first_line, "comment", None
     ):
-        end_of_row_comments[
-            -1
-        ] = code_cst.rbracket.whitespace_before.first_line.comment.value
+        end_of_row_comments[-1] = code_cst.rbracket.whitespace_before.first_line.comment.value
 
     # Comments on their own lines after each row - these will be paired with rows
     after_row_comments = []
     for element in code_cst.elements:
-        if hasattr(element.comma, "whitespace_after") and hasattr(
-            element.comma.whitespace_after, "empty_lines"
-        ):
+        if hasattr(element.comma, "whitespace_after") and hasattr(element.comma.whitespace_after, "empty_lines"):
             comment = "\n".join(
-                getattr(line.comment, "value", "")
-                for line in element.comma.whitespace_after.empty_lines
+                getattr(line.comment, "value", "") for line in element.comma.whitespace_after.empty_lines
             )
         else:
             comment = ""
@@ -176,20 +166,14 @@ def reformat(
             separator = ITEM_SEP if need_comma else ""
             pre_separator = "" if align_commas else separator
             post_separator = separator if align_commas else ""
-            output.append(
-                item
-                + pre_separator
-                + " " * (col_widths[idx] - len(item))
-                + post_separator
-            )
+            output.append(item + pre_separator + " " * (col_widths[idx] - len(item)) + post_separator)
             last_idx = idx
         output.append(CLOSER[row_type] + ",")
         adjusted_end_of_row_comment = add_noqa_markers(end_of_row_comment, add_noqa)
         if adjusted_end_of_row_comment:
             # padding for ragged rows:
             comment_padding = sum(
-                col_widths[i] + (len(ITEM_SEP) if i > 0 else 0)
-                for i in range(last_idx + 1, col_count)
+                col_widths[i] + (len(ITEM_SEP) if i > 0 else 0) for i in range(last_idx + 1, col_count)
             )
             output.append(" " * comment_padding + "  # " + adjusted_end_of_row_comment)
         output.append("\n")
@@ -237,9 +221,7 @@ def reformat_as_single_line(python_code):
     #   to produce the PEP8 spacings around operators etc. ast_decompiler does approx
     #   PEP8 formatting by default.
 
-    reformatted = ast_decompiler.decompile(
-        code_ast, indentation=0, line_length=100000
-    ).strip()
+    reformatted = ast_decompiler.decompile(code_ast, indentation=0, line_length=100000).strip()
 
     # This has the unfortunate problem of stripping `(` and `)` for tuples, which is not what we want
     if isinstance(code_ast.body[0].value, ast.Tuple):

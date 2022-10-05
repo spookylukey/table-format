@@ -1,0 +1,10 @@
+[tool.black]
+line-length = 120
+# required-version = '22.8.0' # see https://github.com/psf/black/issues/2493
+target-version = ['py310']
+
+
+[tool.isort]
+profile = "black"
+line_length = 120
+skip = [".tox",".ve","dist","build"]
