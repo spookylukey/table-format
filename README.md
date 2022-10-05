@@ -75,8 +75,19 @@ assert generate_the_table() == [
 
 Wouldn't it be nice to have readable tests with columns all lined up?
 
-Copy the whole list of lists to the clipboard, then pipe to ``table-format
+```python
+    [
+        ['Date',       'Description',                          'Amount', 'Balance'],
+        ['2021-04-06', 'Account opened',                       0,        0        ],
+        ['2021-04-07', 'Cash deposit at 123 Main St, Newtown', 1000,     1000     ],
+        ['2021-04-08', 'ACME anvils',                          -300,     700      ],
+    ]
+```
+
+
+To reformat, copy the whole list of lists to the clipboard, then pipe to ``table-format
 --guess-indent``:
+
 * on Linux you can use `xsel` or `xclip`
 * on MacOS you can use `pbpaste`
 * on Windows Powershell you can use `Get-Clipboard`
@@ -85,15 +96,10 @@ Linux example:
 
 ```shell
 $ xsel | table-format --guess-indent
-[
-        ['Date',       'Description',                          'Amount', 'Balance'],
-        ['2021-04-06', 'Account opened',                       0,        0        ],
-        ['2021-04-07', 'Cash deposit at 123 Main St, Newtown', 1000,     1000     ],
-        ['2021-04-08', 'ACME anvils',                          -300,     700      ],
-    ]
 ```
 
-The output should be ready to paste back into your editor.
+The output should be ready to paste back into your editor. You might do better
+with some editor integration — see the tips below.
 
 ### Options
 
@@ -138,7 +144,8 @@ $ pip install -e .
 
 ### Tuples
 
-We also support having lists of tuples as well as lists of lists, and this will be preserved.
+It also supports having lists of tuples as well as lists of lists, and this will
+be preserved.
 
 ### Black
 
