@@ -299,3 +299,20 @@ def test_reformat_as_single_line_string():
     """) == """
     'x"x'
     """.strip()
+
+
+def test_reformat_as_single_line_fstring():
+    assert reformat_as_single_line("""
+    f"{x}"
+    """) == """
+    f'{x}'
+    """.strip()
+
+    # Obscure case with string nested inside pattern. This test exists due to
+    # ast_decompiler limitations, this is a note to self that if we tried to
+    # switch to prefer double quotes we might need to do some work.
+    assert reformat_as_single_line("""
+    f"{'x'}"
+    """) == """
+    f'{"x"}'
+    """.strip()

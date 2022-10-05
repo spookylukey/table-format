@@ -234,7 +234,9 @@ def reformat_as_single_line(python_code):
     #   whitespace in for long argument lists etc.
     #
     # - Using libcst - would require complicated manipulation of whitespace elements
-    #   to produce the PEP8 spacings around operators etc.
+    #   to produce the PEP8 spacings around operators etc. ast_decompiler does approx
+    #   PEP8 formatting by default.
+
     reformatted = ast_decompiler.decompile(
         code_ast, indentation=0, line_length=100000
     ).strip()
